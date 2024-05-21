@@ -242,7 +242,7 @@ export default function OverviewTab(props) {
                             {updatingDetails ? (
                                 <Loader size={20} />
                             ) : (
-                                <Text fz='lg'>{selectedAddress.balance} KAS</Text>
+                                <Text fz='lg'>{selectedAddress.balance} HTN</Text>
                             )}
                         </Group>
                     </Stack>

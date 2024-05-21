@@ -293,7 +293,7 @@ export default function Dashboard() {
                 notifications.show({
                     title: 'Error',
                     color: 'red',
-                    message: 'Please make sure your device is unlocked and the Kaspa app is open',
+                    message: 'Please make sure your device is unlocked and the Hoosat app is open',
                     autoClose: false,
                 });
                 console.error(e);

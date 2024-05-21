@@ -30,12 +30,12 @@ async function getAppData(router, deviceType = 'usb') {
         const transport = await initTransport(deviceType);
         const { name } = await getAppAndVersion(transport);
 
-        if (name == 'Kaspa') {
+        if (name == 'Hoosat') {
             return router.push(`/wallet?deviceType=${deviceType}`);
         } else {
             notifications.show({
                 title: 'Action Required',
-                message: 'Please open the Kaspa app on your device.',
+                message: 'Please open the Hoosat app on your device.',
             });
         }
     } catch (e) {

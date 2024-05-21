@@ -108,7 +108,7 @@ export function publicKeyToAddress(
     }
 
     var eight0: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
-    var prefixData = prefixToArray('kaspa').concat([0]);
+    var prefixData = prefixToArray('hoosat').concat([0]);
     var versionByte: number = getTypeBits(type);
     var arr: number[] = Array.prototype.slice.call(hashBuffer, 0);
     var payloadData: number[] = convertBits([versionByte].concat(arr), 8, 5);
@@ -117,7 +117,7 @@ export function publicKeyToAddress(
     if (stripPrefix === true) {
         return base32.encode(payload);
     } else {
-        return 'kaspa:' + base32.encode(payload);
+        return 'hoosat:' + base32.encode(payload);
     }
 }
 
