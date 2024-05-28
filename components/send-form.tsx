@@ -296,7 +296,7 @@ export default function SendForm(props) {
                     <Text fw={600}>Transaction ID</Text>
 
                     <Anchor
-                        href={`https://explorer.kaspa.org/txs/${form.values.sentTxId}`}
+                        href={`https://explorer.hoosat.fi/txs/${form.values.sentTxId}`}
                         target='_blank'
                         c='brand'
                         w={'calc(var(--modal-size) - 6rem)'}
