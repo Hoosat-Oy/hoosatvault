@@ -1,6 +1,6 @@
-# KasVault
+# HoosatVault
 
-KasVault is a simple frontend interface for your Ledger device.
+HoosatVault is a simple frontend interface for your Ledger device.
 
 ## Official User Guide
 
@@ -26,6 +26,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to start u
 
 ## FAQ
 
-### Are my funds safe with KasVault?
+### Are my funds safe with HoosatVault?
 
-Yes, but to be clear KasVault itself does not store your Kaspa. Your Kaspa is also not stored in the Ledger device as well. When you send kaspa to the address you generate with KasVault, it is stored on the blockdag as a UTXO.
+Yes, but to be clear HoosatVault itself does not store your HTN. Your HTN is also not stored in the Ledger device as well. When you send HTN to the address you generate with HoosatVault, it is stored on the blockdag as a UTXO.
