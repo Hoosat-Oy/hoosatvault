@@ -19,7 +19,7 @@ let transportState = {
 };
 
 export async function fetchTransaction(transactionId: string) {
-    const { data: txData } = await axios.get(`https://api.kaspa.org/transactions/${transactionId}`);
+    const { data: txData } = await axios.get(`https://api.network.hoosat.fi/txs/${transactionId}`);
 
     return txData;
 }
@@ -117,7 +117,7 @@ export async function initTransport(type = 'usb') {
 
 export async function fetchTransactionCount(address) {
     const { data: txCount } = await axios.get(
-        `https://api.kaspa.org/addresses/${address}/transactions-count`,
+        `https://api.network.hoosat.fi/addresses/${address}/transactions-count`,
     );
 
     return txCount.total || 0;
@@ -131,9 +131,9 @@ export type UtxoInfo = {
 
 export async function fetchAddressDetails(address, derivationPath) {
     const { data: balanceData } = await axios.get(
-        `https://api.kaspa.org/addresses/${address}/balance`,
+        `https://api.network.hoosat.fi/addresses/${address}/balance`,
     );
-    const { data: utxoData } = await axios.get(`https://api.kaspa.org/addresses/${address}/utxos`);
+    const { data: utxoData } = await axios.get(`https://api.network.hoosat.fi/addresses/${address}/utxos`);
 
     // UTXOs sorted by decreasing amount. Using the biggest UTXOs first minimizes number of utxos needed
     // in a transaction
@@ -162,7 +162,7 @@ export async function fetchAddressDetails(address, derivationPath) {
 
 export async function fetchTransactions(address, offset = 0, limit = 100) {
     const { data: txsData } = await axios.get(
-        `https://api.kaspa.org/addresses/${address}/full-transactions?offset=${offset}&limit=${limit}&resolve_previous_outpoints=light`,
+        `https://api.network.hoosat.fi/addresses/${address}/full-transactions?offset=${offset}&limit=${limit}&resolve_previous_outpoints=light`,
     );
 
     return txsData;
@@ -237,7 +237,7 @@ export async function getAddress(path = "44'/111111'/0'/0/0", display = false) {
 export const sendTransaction = async (signedTx) => {
     const txJson = signedTx.toApiJSON();
 
-    const { data } = await axios.post(`https://api.kaspa.org/transactions`, txJson);
+    const { data } = await axios.post(`https://api.network.hoosat.fi/transactions`, txJson);
 
     return data.transactionId;
 };

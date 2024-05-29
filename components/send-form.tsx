@@ -46,7 +46,7 @@ export default function SendForm(props) {
         },
         validate: {
             amount: (value) => (!(Number(value) > 0) ? 'Amount must be greater than 0' : null),
-            sendTo: (value) => (!/^kaspa\:[a-z0-9]{61,63}$/.test(value) ? 'Invalid address' : null),
+            sendTo: (value) => (!/^hoosat\:[a-z0-9]{61,63}$/.test(value) ? 'Invalid address' : null),
         },
         validateInputOnBlur: true,
     });
@@ -139,7 +139,7 @@ export default function SendForm(props) {
                     notifications.show({
                         title: 'Error',
                         color: 'red',
-                        message: `You have too many UTXOs to send this amount. Please compound first by sending KAS to your address. Maximum sendable without compounding (including fee): ${maxCompoundableAmount}`,
+                        message: `You have too many UTXOs to send this amount. Please compound first by sending HTN to your address. Maximum sendable without compounding (including fee): ${maxCompoundableAmount}`,
                         autoClose: false,
                         loading: false,
                     });
@@ -181,7 +181,7 @@ export default function SendForm(props) {
                 notifications.show({
                     title: 'Error',
                     color: 'red',
-                    message: `You have too many UTXOs to send this amount. Please compound first by sending KAS to your address. Maximum sendable without compounding (including fee): ${maxCompoundableAmount}`,
+                    message: `You have too many UTXOs to send this amount. Please compound first by sending HTN to your address. Maximum sendable without compounding (including fee): ${maxCompoundableAmount}`,
                     autoClose: false,
                     loading: false,
                 });
@@ -243,7 +243,7 @@ export default function SendForm(props) {
                 />
 
                 <NumberInput
-                    label='Amount in KAS'
+                    label='Amount in HTN'
                     placeholder='0'
                     min={0}
                     decimalScale={8}
@@ -296,7 +296,7 @@ export default function SendForm(props) {
                     <Text fw={600}>Transaction ID</Text>
 
                     <Anchor
-                        href={`https://explorer.kaspa.org/txs/${form.values.sentTxId}`}
+                        href={`https://explorer.hoosat.fi/txs/${form.values.sentTxId}`}
                         target='_blank'
                         c='brand'
                         w={'calc(var(--modal-size) - 6rem)'}
@@ -306,7 +306,7 @@ export default function SendForm(props) {
                     </Anchor>
 
                     <Text component='h2' fw={600}>
-                        {form.values.sentAmount} KAS
+                        {form.values.sentAmount} HTN
                     </Text>
 
                     <Text>sent to</Text>

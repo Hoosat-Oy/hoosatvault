@@ -9,7 +9,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-    title: 'KasVault',
+    title: 'Hoosat Vault',
     description: 'The frontend interface for your Ledger device',
 };
 

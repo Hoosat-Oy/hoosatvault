@@ -8,7 +8,7 @@ export default function Header(props) {
         <Group className={styles.header}>
             <div className={styles.child}>{props.children}</div>
             <div>
-                <a href='https://kaspa.org' target='_blank' rel='noopener noreferrer'>
+                <a href='https://network.hoosat.fi' target='_blank' rel='noopener noreferrer'>
                     <Image
                         src='/kaspa-icon.svg'
                         alt='Kaspa Logo'
