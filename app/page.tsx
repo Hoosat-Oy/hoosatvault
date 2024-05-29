@@ -63,10 +63,7 @@ async function getAppData(router, deviceType = 'usb') {
 }
 
 const WHITELIST = [
-    'kasvault.io',
-    'preview.kasvault.io',
-    'privatepreview.kasvault.io',
-    'kasvault.vercel.app',
+    'vault.hoosat.fi',
 ];
 
 export default function Home() {
@@ -77,7 +74,7 @@ export default function Home() {
 
     useEffect(() => {
         if (window.location.hostname === 'localhost') {
-            setSiteHostname('http://vault.hoosat.fi');
+            setSiteHostname('http://localhost:8085');
         } else {
             for (const currentWhitelist of WHITELIST) {
                 if (window.location.hostname === currentWhitelist) {
