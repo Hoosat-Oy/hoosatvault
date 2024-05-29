@@ -10,8 +10,8 @@ export default function Header(props) {
             <div>
                 <a href='https://network.hoosat.fi' target='_blank' rel='noopener noreferrer'>
                     <Image
-                        src='/kaspa-icon.svg'
-                        alt='Kaspa Logo'
+                        src='/hoosat-icon.png'
+                        alt='Hoosat Logo'
                         className={styles.kaspaLogo}
                         width={48}
                         height={48}

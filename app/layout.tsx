@@ -18,26 +18,26 @@ export default function RootLayout({ children }) {
         <html lang='en'>
             <head>
                 <ColorSchemeScript />
-                <link rel='shortcut icon' href='/favicon.svg' />
+                <link rel='shortcut icon' href='/favicon.ico' />
             </head>
             <body className={inter.className}>
                 <MantineProvider
-                    defaultColorScheme='dark'
+                    defaultColorScheme='light'
                     theme={{
                         fontFamily: 'Lato',
                         fontFamilyMonospace: 'Roboto Mono,Courier New,Courier,monospace',
                         colors: {
                             brand: [
-                                '#49EACB',
-                                '#49EACB',
-                                '#49EACB',
-                                '#49EACB',
-                                '#49EACB',
-                                '#49EACB',
-                                '#49EACB',
-                                '#49EACB',
-                                '#49EACB',
-                                '#49EACB',
+                                '#116466',
+                                '#116466',
+                                '#116466',
+                                '#116466',
+                                '#116466',
+                                '#116466',
+                                '#116466',
+                                '#116466',
+                                '#116466',
+                                '#116466',
                             ],
                         },
                         primaryColor: 'brand',
