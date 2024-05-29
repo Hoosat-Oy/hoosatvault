@@ -160,66 +160,69 @@ export default function SendForm(props) {
         }
     };
 
-    const calcFee = useCallback((sendTo, amount, includeFeeInAmount) => {
-        setAmountDescription('');
+    const calcFee = useCallback(
+        (sendTo, amount, includeFeeInAmount) => {
+            setAmountDescription('');
 
-        if (amount && sendTo) {
-            let calculatedFee: string | number = '-';
+            if (amount && sendTo) {
+                let calculatedFee: string | number = '-';
 
-            const {
-                hasEnough,
-                utxos,
-                fee: feeCalcResult,
-                total: utxoTotalAmount,
-            } = selectUtxos(kasToSompi(amount), addressContext.utxos, includeFeeInAmount);
+                const {
+                    hasEnough,
+                    utxos,
+                    fee: feeCalcResult,
+                    total: utxoTotalAmount,
+                } = selectUtxos(kasToSompi(amount), addressContext.utxos, includeFeeInAmount);
 
-            if (utxos.length > NETWORK_UTXO_LIMIT) {
-                const maxCompoundableAmount = sompiToKas(
-                    utxos.slice(0, NETWORK_UTXO_LIMIT).reduce((acc, utxo) => {
-                        return acc + utxo.amount;
-                    }, 0),
-                );
-                notifications.show({
-                    title: 'Error',
-                    color: 'red',
-                    message: `You have too many UTXOs to send this amount. Please compound first by sending HTN to your address. Maximum sendable without compounding (including fee): ${maxCompoundableAmount}`,
-                    autoClose: false,
-                    loading: false,
-                });
-                setCanSendAmount(false);
-            } else if (hasEnough) {
-                let changeAmount = utxoTotalAmount - kasToSompi(amount);
-                if (!includeFeeInAmount) {
-                    changeAmount -= feeCalcResult;
+                if (utxos.length > NETWORK_UTXO_LIMIT) {
+                    const maxCompoundableAmount = sompiToKas(
+                        utxos.slice(0, NETWORK_UTXO_LIMIT).reduce((acc, utxo) => {
+                            return acc + utxo.amount;
+                        }, 0),
+                    );
+                    notifications.show({
+                        title: 'Error',
+                        color: 'red',
+                        message: `You have too many UTXOs to send this amount. Please compound first by sending HTN to your address. Maximum sendable without compounding (including fee): ${maxCompoundableAmount}`,
+                        autoClose: false,
+                        loading: false,
+                    });
+                    setCanSendAmount(false);
+                } else if (hasEnough) {
+                    let changeAmount = utxoTotalAmount - kasToSompi(amount);
+                    if (!includeFeeInAmount) {
+                        changeAmount -= feeCalcResult;
+                    }
+
+                    let expectedFee = feeCalcResult;
+                    // The change is added to the fee if it's less than 0.0001 KAS
+                    console.info('changeAmount', changeAmount);
+                    if (changeAmount < 10000) {
+                        console.info(`Adding dust change ${changeAmount} sompi to fee`);
+                        expectedFee += changeAmount;
+                    }
+
+                    calculatedFee = sompiToKas(expectedFee);
+                    const afterFeeDisplay = sompiToKas(kasToSompi(amount) - expectedFee);
+                    setCanSendAmount(true);
+                    if (includeFeeInAmount) {
+                        setAmountDescription(`Amount after fee: ${afterFeeDisplay}`);
+                    }
+                } else {
+                    setCanSendAmount(false);
                 }
 
-                let expectedFee = feeCalcResult;
-                // The change is added to the fee if it's less than 0.0001 KAS
-                console.info('changeAmount', changeAmount);
-                if (changeAmount < 10000) {
-                    console.info(`Adding dust change ${changeAmount} sompi to fee`);
-                    expectedFee += changeAmount;
-                }
-
-                calculatedFee = sompiToKas(expectedFee);
-                const afterFeeDisplay = sompiToKas(kasToSompi(amount) - expectedFee);
-                setCanSendAmount(true);
-                if (includeFeeInAmount) {
-                    setAmountDescription(`Amount after fee: ${afterFeeDisplay}`);
+                if (fee === '-' || fee !== calculatedFee) {
+                    setFee(calculatedFee);
                 }
             } else {
+                setFee('-');
                 setCanSendAmount(false);
+                setAmountDescription('');
             }
-
-            if (fee === '-' || fee !== calculatedFee) {
-                setFee(calculatedFee);
-            }
-        } else {
-            setFee('-');
-            setCanSendAmount(false);
-            setAmountDescription('');
-        }
-    }, []);
+        },
+        [addressContext, fee],
+    );
 
     const setMaxAmount = () => {
         const total = addressContext.utxos.reduce((acc, utxo) => {
