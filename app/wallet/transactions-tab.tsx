@@ -62,30 +62,29 @@ export default function TransactionsTab(props) {
     const [txCount, setTxCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const width = props.containerWidth;
+    const { selectedAddress, newTransactions } = props;
 
     const maxPages = txCount ? Math.ceil(txCount / PAGE_SIZE) : 0;
 
     useEffect(() => {
-        if (!props.selectedAddress) {
+        if (!selectedAddress) {
             return;
         }
 
-        fetchTransactionCount(props.selectedAddress.address).then((count) => {
+        fetchTransactionCount(selectedAddress.address).then((count) => {
             setTxCount(count);
             setPage(1);
         });
-    }, [props.selectedAddress, props.newTransactions]);
+    }, [selectedAddress, newTransactions]);
 
     useEffect(() => {
         if (page) {
             setLoading(true);
-            loadAddressTransactions(props.selectedAddress, setTransactions, page, txCount).then(
-                () => {
-                    setLoading(false);
-                },
-            );
+            loadAddressTransactions(selectedAddress, setTransactions, page, txCount).then(() => {
+                setLoading(false);
+            });
         }
-    }, [page, txCount]);
+    }, [page, txCount, selectedAddress]);
 
     const rows = (transactions || []).map((row) => {
         return (

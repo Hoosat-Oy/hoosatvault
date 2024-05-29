@@ -133,7 +133,9 @@ export async function fetchAddressDetails(address, derivationPath) {
     const { data: balanceData } = await axios.get(
         `https://api.network.hoosat.fi/addresses/${address}/balance`,
     );
-    const { data: utxoData } = await axios.get(`https://api.network.hoosat.fi/addresses/${address}/utxos`);
+    const { data: utxoData } = await axios.get(
+        `https://api.network.hoosat.fi/addresses/${address}/utxos`,
+    );
 
     // UTXOs sorted by decreasing amount. Using the biggest UTXOs first minimizes number of utxos needed
     // in a transaction

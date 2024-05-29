@@ -16,7 +16,7 @@ import { useTimeout, useDisclosure, useViewportSize } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { useSearchParams } from 'next/navigation';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createTransaction, sendAmount, selectUtxos } from '@/lib/ledger';
 import AddressText from '@/components/address-text';
 import { useForm } from '@mantine/form';
@@ -26,6 +26,7 @@ export default function SendForm(props) {
     const [confirming, setConfirming] = useState(false);
     const [fee, setFee] = useState<string | number>('-');
     const [amountDescription, setAmountDescription] = useState<string>();
+    const { addressContext, onSuccess } = props;
 
     const [canSendAmount, setCanSendAmount] = useState(false);
 
@@ -46,23 +47,28 @@ export default function SendForm(props) {
         },
         validate: {
             amount: (value) => (!(Number(value) > 0) ? 'Amount must be greater than 0' : null),
-            sendTo: (value) => (!/^hoosat\:[a-z0-9]{61,63}$/.test(value) ? 'Invalid address' : null),
+            sendTo: (value) => {
+                return !/^hoosat\:[a-z0-9]{61,63}$/.test(value) ? 'Invalid address' : null;
+            },
         },
         validateInputOnBlur: true,
     });
 
-    const resetState = (resetAllValues = false) => {
-        // Reset setup
-        setConfirming(false);
-        setFee('-');
-        let baseValues = { amount: '', sendTo: '', includeFeeInAmount: false };
+    const resetState = useCallback(
+        (resetAllValues = false) => {
+            // Reset setup
+            setConfirming(false);
+            setFee('-');
+            let baseValues = { amount: '', sendTo: '', includeFeeInAmount: false };
 
-        if (resetAllValues) {
-            form.setValues({ sentTo: '', sentTxId: '', sentAmount: '', ...baseValues });
-        } else {
-            form.setValues(baseValues);
-        }
-    };
+            if (resetAllValues) {
+                form.setValues({ sentTo: '', sentTxId: '', sentAmount: '', ...baseValues });
+            } else {
+                form.setValues(baseValues);
+            }
+        },
+        [form, setConfirming, setFee],
+    );
 
     const cleanupOnSuccess = (transactionId) => {
         const targetAmount = form.values.includeFeeInAmount
@@ -78,19 +84,14 @@ export default function SendForm(props) {
 
         resetState();
 
-        if (props.onSuccess) {
-            props.onSuccess(transactionId);
+        if (onSuccess) {
+            onSuccess(transactionId);
         }
     };
 
     useEffect(() => {
         resetState();
-    }, [props.addressContext]);
-
-    useEffect(() => {
-        // Whenever any of fields change, we calculate the fees
-        calcFee(form.values.sendTo, form.values.amount, form.values.includeFeeInAmount);
-    }, [form.values.sendTo, form.values.amount, form.values.includeFeeInAmount]);
+    }, [addressContext, resetState]);
 
     const { start: simulateConfirmation } = useTimeout((args) => {
         // Hide when ledger confirms
@@ -117,9 +118,9 @@ export default function SendForm(props) {
                 const { tx } = createTransaction(
                     kasToSompi(Number(form.values.amount)),
                     form.values.sendTo,
-                    props.addressContext.utxos,
-                    props.addressContext.derivationPath,
-                    props.addressContext.address,
+                    addressContext.utxos,
+                    addressContext.derivationPath,
+                    addressContext.address,
                     form.values.includeFeeInAmount,
                 );
 
@@ -129,10 +130,10 @@ export default function SendForm(props) {
             } catch (e) {
                 console.error(e);
 
-                if (e.statusCode == 0xb005 && props.addressContext.utxos.length > 15) {
+                if (e.statusCode == 0xb005 && addressContext.utxos.length > 15) {
                     // This is probably a Nano S
                     const maxCompoundableAmount = sompiToKas(
-                        props.addressContext.utxos.slice(0, 15).reduce((acc, utxo) => {
+                        addressContext.utxos.slice(0, 15).reduce((acc, utxo) => {
                             return acc + utxo.amount;
                         }, 0),
                     );
@@ -159,7 +160,7 @@ export default function SendForm(props) {
         }
     };
 
-    const calcFee = (sendTo, amount, includeFeeInAmount) => {
+    const calcFee = useCallback((sendTo, amount, includeFeeInAmount) => {
         setAmountDescription('');
 
         if (amount && sendTo) {
@@ -170,7 +171,7 @@ export default function SendForm(props) {
                 utxos,
                 fee: feeCalcResult,
                 total: utxoTotalAmount,
-            } = selectUtxos(kasToSompi(amount), props.addressContext.utxos, includeFeeInAmount);
+            } = selectUtxos(kasToSompi(amount), addressContext.utxos, includeFeeInAmount);
 
             if (utxos.length > NETWORK_UTXO_LIMIT) {
                 const maxCompoundableAmount = sompiToKas(
@@ -218,10 +219,10 @@ export default function SendForm(props) {
             setCanSendAmount(false);
             setAmountDescription('');
         }
-    };
+    }, []);
 
     const setMaxAmount = () => {
-        const total = props.addressContext.utxos.reduce((acc, utxo) => {
+        const total = addressContext.utxos.reduce((acc, utxo) => {
             return acc + utxo.amount;
         }, 0);
 
@@ -230,6 +231,11 @@ export default function SendForm(props) {
             includeFeeInAmount: true,
         });
     };
+
+    useEffect(() => {
+        // Whenever any of fields change, we calculate the fees
+        calcFee(form.values.sendTo, form.values.amount, form.values.includeFeeInAmount);
+    }, [form.values.sendTo, form.values.amount, form.values.includeFeeInAmount, calcFee]);
 
     return (
         <>

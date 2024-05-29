@@ -10,6 +10,7 @@ import { notifications } from '@mantine/notifications';
 export default function MessageForm(props) {
     const [signature, setSignature] = useState('');
     const [opened, { open, close }] = useDisclosure(false);
+    const { selectedAddress, deviceType } = props;
 
     const form = useForm({
         initialValues: {
@@ -21,15 +22,18 @@ export default function MessageForm(props) {
     });
 
     useEffect(() => {
-        // Reset message
-        form.setValues({ message: '' });
-        // Close the modal if opened
-        if (opened) {
-            close();
-        }
-        // Blank out the signature
-        setSignature('');
-    }, [props.selectedAddress]);
+        const resetMessage = async () => {
+            // Reset message
+            form.setValues({ message: '' });
+            // Close the modal if opened
+            if (opened) {
+                close();
+            }
+            // Blank out the signature
+            setSignature('');
+        };
+        resetMessage();
+    }, [selectedAddress, close, form, opened]);
 
     const onClickSignMessage = async () => {
         const notifId = notifications.show({
@@ -40,12 +44,12 @@ export default function MessageForm(props) {
         });
 
         try {
-            const path = props.selectedAddress.derivationPath.split('/');
+            const path = selectedAddress.derivationPath.split('/');
             const result = await signMessage(
                 form.values.message,
                 Number(path[3]),
                 Number(path[4]),
-                props.deviceType,
+                deviceType,
             );
             setSignature(result.signature);
 

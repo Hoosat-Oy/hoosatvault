@@ -20,6 +20,7 @@ import { useEffect } from 'react';
 
 export default function AddressesTab(props) {
     const width = props.containerWidth;
+    const { addresses, setSelectedAddress } = props;
 
     const onRowClick = (row) => {
         props.setSelectedAddress(row);
@@ -57,10 +58,10 @@ export default function AddressesTab(props) {
     });
 
     useEffect(() => {
-        if (props.addresses?.length === 1) {
-            props.setSelectedAddress(props.addresses[0]);
+        if (addresses?.length === 1) {
+            setSelectedAddress(addresses[0]);
         }
-    }, [props.addresses]);
+    }, [addresses, setSelectedAddress]);
 
     return (
         <>
