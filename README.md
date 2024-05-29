@@ -19,6 +19,7 @@ You will need [NodeJS](https://nodejs.org/en) to run this locally
 First, run the development server:
 
 ```bash
+npm install
 npm run dev
 ```
 
