@@ -23,7 +23,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to start using or developing KasVault locally.
+Open [http://localhost:8085](http://localhost:8085) with your browser to start using or developing KasVault locally.
 
 ## FAQ
 

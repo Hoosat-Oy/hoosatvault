@@ -77,7 +77,7 @@ export default function Home() {
 
     useEffect(() => {
         if (window.location.hostname === 'localhost') {
-            setSiteHostname('http://localhost:3000');
+            setSiteHostname('http://vault.hoosat.fi');
         } else {
             for (const currentWhitelist of WHITELIST) {
                 if (window.location.hostname === currentWhitelist) {
