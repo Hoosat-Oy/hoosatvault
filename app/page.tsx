@@ -121,9 +121,9 @@ export default function Home() {
             <Group className={styles.center}>
                 <Image
                     className={styles.logo}
-                    src='/kasvault-full-stk.svg'
+                    src='/v3.png'
                     alt='KasVault'
-                    width={180}
+                    width={210}
                     height={180}
                     priority
                 />
