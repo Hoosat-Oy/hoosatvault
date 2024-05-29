@@ -62,9 +62,7 @@ async function getAppData(router, deviceType = 'usb') {
     }
 }
 
-const WHITELIST = [
-    'vault.hoosat.fi',
-];
+const WHITELIST = ['vault.hoosat.fi'];
 
 export default function Home() {
     const router = useRouter();
