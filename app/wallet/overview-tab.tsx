@@ -19,7 +19,7 @@ import MessageForm from '@/components/message-form';
 import { IconCopy, IconCheck, IconShieldCheckFilled, IconShield } from '@tabler/icons-react';
 import AddressText from '@/components/address-text';
 import { fetchAddressDetails, fetchTransaction, getAddress } from '@/lib/ledger';
-import { delay } from '@/lib/util';
+import { delay, fetchTokenPrice } from '@/lib/util';
 
 import styles from './overview-tab.module.css';
 import { sompiToKas } from '@/lib/kaspa-util';
@@ -31,6 +31,8 @@ export default function OverviewTab(props) {
     const [signView, setSignView] = useState('Transaction');
     const { width, height } = useViewportSize();
 
+    const [tokenPrice, setTokenPrice] = useState(0);
+
     const selectedAddress = props.selectedAddress || {};
 
     const partitionWidth =
@@ -40,6 +42,16 @@ export default function OverviewTab(props) {
     useEffect(() => {
         setIsAddressVerified(false);
     }, [props.selectedAddress]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const price = await fetchTokenPrice();
+            if (price !== null) {
+                setTokenPrice(price);
+            }
+        };
+        fetchData();
+    }, []);
 
     const verifyAddress = async () => {
         if (isAddressVerified) {
@@ -242,7 +254,9 @@ export default function OverviewTab(props) {
                             {updatingDetails ? (
                                 <Loader size={20} />
                             ) : (
-                                <Text fz='lg'>{selectedAddress.balance} HTN</Text>
+                                <Text fz='lg'>
+                                    {selectedAddress.balance} HTN ({tokenPrice} USD)
+                                </Text>
                             )}
                         </Group>
                     </Stack>
