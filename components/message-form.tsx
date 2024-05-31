@@ -10,7 +10,6 @@ import { notifications } from '@mantine/notifications';
 export default function MessageForm(props) {
     const [signature, setSignature] = useState('');
     const [opened, { open, close }] = useDisclosure(false);
-    const { selectedAddress, deviceType } = props;
 
     const form = useForm({
         initialValues: {
@@ -33,7 +32,7 @@ export default function MessageForm(props) {
             setSignature('');
         };
         resetMessage();
-    }, [selectedAddress, close, form, opened]);
+    }, [props.selectedAddress, close, form, opened]);
 
     const onClickSignMessage = async () => {
         const notifId = notifications.show({
@@ -44,12 +43,12 @@ export default function MessageForm(props) {
         });
 
         try {
-            const path = selectedAddress.derivationPath.split('/');
+            const path = props.selectedAddress.derivationPath.split('/');
             const result = await signMessage(
                 form.values.message,
                 Number(path[3]),
                 Number(path[4]),
-                deviceType,
+                props.deviceType,
             );
             setSignature(result.signature);
 

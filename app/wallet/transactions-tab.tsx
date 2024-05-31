@@ -56,35 +56,42 @@ async function loadAddressTransactions(selectedAddress, setTransactions, page = 
     setTransactions(processedTxData);
 }
 
-export default function TransactionsTab(props) {
+export default function TransactionsTab(props: {
+    containerWidth: any;
+    selectedAddress: { address: string };
+    newTransactions: any;
+    setSelectedAddress: any;
+    containerHeight: any;
+}) {
     const [transactions, setTransactions] = useState([]);
     const [page, setPage] = useState(0);
     const [txCount, setTxCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const width = props.containerWidth;
-    const { selectedAddress, newTransactions } = props;
 
     const maxPages = txCount ? Math.ceil(txCount / PAGE_SIZE) : 0;
 
     useEffect(() => {
-        if (!selectedAddress) {
+        if (!props.selectedAddress) {
             return;
         }
 
-        fetchTransactionCount(selectedAddress.address).then((count) => {
+        fetchTransactionCount(props.selectedAddress.address).then((count) => {
             setTxCount(count);
             setPage(1);
         });
-    }, [selectedAddress, newTransactions]);
+    }, [props.selectedAddress, props.newTransactions]);
 
     useEffect(() => {
         if (page) {
             setLoading(true);
-            loadAddressTransactions(selectedAddress, setTransactions, page, txCount).then(() => {
-                setLoading(false);
-            });
+            loadAddressTransactions(props.selectedAddress, setTransactions, page, txCount).then(
+                () => {
+                    setLoading(false);
+                },
+            );
         }
-    }, [page, txCount, selectedAddress]);
+    }, [page, txCount, props.selectedAddress]);
 
     const rows = (transactions || []).map((row) => {
         return (

@@ -24,7 +24,15 @@ import { delay, fetchTokenPrice } from '@/lib/util';
 import styles from './overview-tab.module.css';
 import { sompiToKas } from '@/lib/kaspa-util';
 
-export default function OverviewTab(props) {
+export default function OverviewTab(props: {
+    selectedAddress: any;
+    containerWidth: number;
+    containerHeight: number;
+    setAddresses: (arg0: any) => void;
+    setSelectedAddress: (arg0: any) => void;
+    addresses: any[];
+    deviceType: any;
+}) {
     const groupRef = useRef(null);
     const [updatingDetails, setUpdatingDetails] = useState(false);
     const [isAddressVerified, setIsAddressVerified] = useState(false);

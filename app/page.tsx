@@ -117,7 +117,7 @@ export default function Home() {
                 <Image
                     className={styles.logo}
                     src='/v3.png'
-                    alt='KasVault'
+                    alt='HoosatVault'
                     width={210}
                     height={180}
                     priority

@@ -22,11 +22,10 @@ import AddressText from '@/components/address-text';
 import { useForm } from '@mantine/form';
 import { kasToSompi, sompiToKas, NETWORK_UTXO_LIMIT } from '@/lib/kaspa-util';
 
-export default function SendForm(props) {
+export default function SendForm(props: { hideHeader: any; onSuccess: any; addressContext: any }) {
     const [confirming, setConfirming] = useState(false);
     const [fee, setFee] = useState<string | number>('-');
     const [amountDescription, setAmountDescription] = useState<string>();
-    const { addressContext, onSuccess } = props;
 
     const [canSendAmount, setCanSendAmount] = useState(false);
 
@@ -84,14 +83,14 @@ export default function SendForm(props) {
 
         resetState();
 
-        if (onSuccess) {
-            onSuccess(transactionId);
+        if (props.onSuccess) {
+            props.onSuccess(transactionId);
         }
     };
 
     useEffect(() => {
         resetState();
-    }, [addressContext, resetState]);
+    }, [props.addressContext]);
 
     const { start: simulateConfirmation } = useTimeout((args) => {
         // Hide when ledger confirms
@@ -118,9 +117,9 @@ export default function SendForm(props) {
                 const { tx } = createTransaction(
                     kasToSompi(Number(form.values.amount)),
                     form.values.sendTo,
-                    addressContext.utxos,
-                    addressContext.derivationPath,
-                    addressContext.address,
+                    props.addressContext.utxos,
+                    props.addressContext.derivationPath,
+                    props.addressContext.address,
                     form.values.includeFeeInAmount,
                 );
 
@@ -130,10 +129,10 @@ export default function SendForm(props) {
             } catch (e) {
                 console.error(e);
 
-                if (e.statusCode == 0xb005 && addressContext.utxos.length > 15) {
+                if (e.statusCode == 0xb005 && props.addressContext.utxos.length > 15) {
                     // This is probably a Nano S
                     const maxCompoundableAmount = sompiToKas(
-                        addressContext.utxos.slice(0, 15).reduce((acc, utxo) => {
+                        props.addressContext.utxos.slice(0, 15).reduce((acc, utxo) => {
                             return acc + utxo.amount;
                         }, 0),
                     );
@@ -172,7 +171,7 @@ export default function SendForm(props) {
                     utxos,
                     fee: feeCalcResult,
                     total: utxoTotalAmount,
-                } = selectUtxos(kasToSompi(amount), addressContext.utxos, includeFeeInAmount);
+                } = selectUtxos(kasToSompi(amount), props.addressContext.utxos, includeFeeInAmount);
 
                 if (utxos.length > NETWORK_UTXO_LIMIT) {
                     const maxCompoundableAmount = sompiToKas(
@@ -221,11 +220,11 @@ export default function SendForm(props) {
                 setAmountDescription('');
             }
         },
-        [addressContext, fee],
+        [props.addressContext, fee],
     );
 
     const setMaxAmount = () => {
-        const total = addressContext.utxos.reduce((acc, utxo) => {
+        const total = props.addressContext.utxos.reduce((acc, utxo) => {
             return acc + utxo.amount;
         }, 0);
 
