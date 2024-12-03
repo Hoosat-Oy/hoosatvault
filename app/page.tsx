@@ -7,7 +7,7 @@ import { notifications } from '@mantine/notifications';
 
 import { Stack, Group, Text } from '@mantine/core';
 import { TransportOpenUserCancelled } from '@ledgerhq/errors';
-import { IconUsb, IconBluetooth } from '@tabler/icons-react';
+import { IconUsb, IconBluetooth, IconBrandTabler } from '@tabler/icons-react';
 
 import Image from 'next/image';
 import Header from '../components/header';
@@ -100,10 +100,11 @@ export default function Home() {
                     <IconBluetooth style={smallStyles} /> Go to Demo Mode <span>-&gt;</span>
                 </Group>
             </h2>
-            <Text>(Replaced with bluetooth in the future)</Text>
+            <Text>This is a demo of the Vault.</Text>
         </Stack>
     ) : null;
 
+    
     return (
         <Stack className={styles.main}>
             <Header>
@@ -126,7 +127,17 @@ export default function Home() {
 
             <Group>
                 {demoButton}
-
+                <Stack
+                    className={styles.card}
+                    align='center'
+                >
+                    <h2>
+                        <Group style={smallStyles}>
+                            <IconBrandTabler style={smallStyles} /> Sideload to Ledger <span>-&gt;</span>
+                        </Group>
+                    </h2>
+                    <Text>Follow instructions in <a href="https://github.com/Hoosat-Oy/app-hoosat">Hoosat Ledger App</a>. </Text>
+                </Stack>
                 <Stack
                     className={styles.card}
                     onClick={() => {
