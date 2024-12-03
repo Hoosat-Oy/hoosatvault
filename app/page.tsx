@@ -104,7 +104,6 @@ export default function Home() {
         </Stack>
     ) : null;
 
-    
     return (
         <Stack className={styles.main}>
             <Header>
@@ -127,16 +126,17 @@ export default function Home() {
 
             <Group>
                 {demoButton}
-                <Stack
-                    className={styles.card}
-                    align='center'
-                >
+                <Stack className={styles.card} align='center'>
                     <h2>
                         <Group style={smallStyles}>
-                            <IconBrandTabler style={smallStyles} /> Sideload to Ledger <span>-&gt;</span>
+                            <IconBrandTabler style={smallStyles} /> Sideload to Ledger{' '}
+                            <span>-&gt;</span>
                         </Group>
                     </h2>
-                    <Text>Follow instructions in <a href="https://github.com/Hoosat-Oy/app-hoosat">Hoosat Ledger App</a>. </Text>
+                    <Text>
+                        Follow instructions in{' '}
+                        <a href='https://github.com/Hoosat-Oy/app-hoosat'>Hoosat Ledger App</a>.{' '}
+                    </Text>
                 </Stack>
                 <Stack
                     className={styles.card}
